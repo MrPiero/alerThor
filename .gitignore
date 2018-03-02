@@ -102,3 +102,6 @@ ENV/
 
 # IDEA PYCHARM
 .idea/
+
+# CONFIG
+config.yml
