@@ -1,14 +1,13 @@
 import unittest
-import login_mail
+from bin import Logger
 
 
 class LoginMailTestCase(unittest.TestCase):
-    """Tests for login_mail.py"""
+    """Tests for bin.Logger.LoggerMail"""
 
     def test_email_sendgrid_success(self):
-        api_key = input("Enter SG API key:")
-        logger = login_mail.LoggerMail(sgkey=api_key)
-        response = logger.send()
+        logger = Logger.Logger().get_logger("SG")
+        response = logger.send(test=True)
         self.assertEqual(202, response.status_code, "TEST EMAIL SENDGRID SUCCES")
 
 

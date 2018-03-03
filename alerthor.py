@@ -1,13 +1,10 @@
-import configparser
-import login_mail
-import sys
+from bin import Logger
 
 
 def main():
-    cfg = configparser.ConfigParser()
-    cfg.read("config.ini")
-    logger = login_mail.LoggerMail(sgkey=cfg["SGCONFIG"]["SGKEY"])
-    logger.send(sender=sys.argv[1], receiver=sys.argv[2])
+    factory = Logger.Logger()
+    logger = factory.get_logger("SG")
+    logger.send()
 
 
 if __name__ == '__main__':
