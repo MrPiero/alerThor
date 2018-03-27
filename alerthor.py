@@ -1,10 +1,10 @@
-from bin import Logger
+from bin import Loggers
 
 
 def main():
-    factory = Logger.Logger()
+    factory = Loggers.LoggerFactory()
     logger = factory.get_logger("SG")
-    logger.send()
+    logger.log()
 
 
 if __name__ == '__main__':
