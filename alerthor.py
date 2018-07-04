@@ -2,8 +2,7 @@ from bin import Loggers
 
 
 def main():
-    factory = Loggers.LoggerFactory()
-    logger = factory.get_logger("SG")
+    logger = Loggers.logger_factory("SG")
     logger.log()
 
 

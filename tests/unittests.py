@@ -6,10 +6,10 @@ class LoggersTestCase(unittest.TestCase):
     """Tests for bin.Loggers.LoggerMail"""
     def setUp(self):
         print("\n=== INITIALIZING TESTS FOR LOGGERS ===")
-        self.loggers = Loggers.LoggerFactory()
+        self.loggers = Loggers.logger_factory
 
     def test_email_sendgrid_success(self):
-        logger = self.loggers.get_logger("SG")
+        logger = self.loggers("SG")
         response = logger.log(test=True)
         self.assertEqual(202, response.status_code, "TEST EMAIL SENDGRID FAILED")
 
