@@ -38,11 +38,13 @@ def get_content():
     system = platform.system()
     node = platform.node()
     time = datetime.datetime.now().strftime("%c")
-    content = "A new SSH login was authorized to the following server:\n" \
-                "\n\tSystem: {}" \
-                "\n\tNode: {}" \
-                "\n\tUser: {}" \
-                "\n\tDatetime: {}".format(system, node, getpass.getuser(), time)
+    content = """
+            A new SSH login was authorized to the following server:\n
+                \n\tSystem: %s
+                \n\tNode: %s
+                \n\tUser: %s
+                \n\tDatetime: %s
+            """ % (system, node, getpass.getuser(), time)
     return content
 
 
@@ -57,10 +59,13 @@ class LoggerMail(Logger):
         self.config = cfg
         self.content = get_content()
 
-    def log(self, sender=None, receiver=None, subject=None):
-        from_email = Email(self.config["DEFAULT_FROM"] if sender is None else sender) 
-        to_email = Email(self.config["DEFAULT_TO"] if receiver is None else receiver)
-        content = Content("text/html", self.content)
-        mail = Mail(from_email, subject, to_email, content)
+    def log(self, sender=None, receiver=None, subject=None, content=None):
+        from_email = self.config["DEFAULT_FROM"] if sender is None else sender
+        to_email = self.config["DEFAULT_TO"] if receiver is None else receiver
+        subject = "New SSH Login" if subject is None else subject
+        content = self.content if content is None else content
+        
+        mail = Mail(from_email= from_email, to_emails=to_email, subject=subject, plain_text_content=content)
 
         return self.sg.client.mail.send.post(request_body=mail.get())
+        
