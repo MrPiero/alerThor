@@ -15,11 +15,11 @@ path_alerThor_config = alerThor_home + "config.ini"
 
 def get_sg(cfg, sgkey):
     if cfg is not None:
-        return sendgrid.SendGridAPIClient(apikey=cfg["SGKEY"])
+        return sendgrid.SendGridAPIClient(api_key=cfg["SGKEY"])
     elif sgkey is not None:
-        return sendgrid.SendGridAPIClient(apikey=sgkey)
+        return sendgrid.SendGridAPIClient(api_key=sgkey)
     else:
-        return sendgrid.SendGridAPIClient(apikey=input("Enter SG API KEY"))
+        return sendgrid.SendGridAPIClient(api_key=input("Enter SG API KEY"))
 
 
 def logger_factory(logger_type, sgkey=None):
