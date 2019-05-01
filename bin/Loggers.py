@@ -5,7 +5,12 @@ import sendgrid
 import configparser
 import os.path
 import platform
+import getpass
 from sendgrid.helpers.mail import *
+
+home = os.path.expanduser("~")
+alerThor_home = home + "/alerThor/"
+path_alerThor_config = alerThor_home + "config.ini"
 
 
 def get_sg(cfg, sgkey):
@@ -19,9 +24,9 @@ def get_sg(cfg, sgkey):
 
 def logger_factory(logger_type, sgkey=None):
     if logger_type == "SG":
-        if os.path.isfile("config.ini"):
+        if os.path.isfile(path_alerThor_config):
             cfg = configparser.ConfigParser()
-            cfg.read("config.ini")
+            cfg.read(path_alerThor_config)
             return LoggerMail(cfg=cfg["SGCONFIG"])
         elif sgkey is not None:
             return LoggerMail(sgkey=sgkey)
@@ -36,7 +41,8 @@ def get_content():
     content = "A new SSH login was authorized to the following server:\n" \
                 "\n\tSystem: {}" \
                 "\n\tNode: {}" \
-                "\n\tDatetime: {}".format(system, node, time)
+                "\n\tUser: {}" \
+                "\n\tDatetime: {}".format(system, node, getpass.getuser(), time)
     return content
 
 
@@ -51,12 +57,9 @@ class LoggerMail(Logger):
         self.config = cfg
         self.content = get_content()
 
-    def log(self, sender="pi@yourhome.com", receiver="you@yourmail.com", subject="SSH Login Authorized", test=False):
-        if not test:
-            sender = self.config["DEFAULT_FROM"]
-            receiver = self.config["DEFAULT_TO"]
-        from_email = Email(sender)
-        to_email = Email(receiver)
+    def log(self, sender=None, receiver=None, subject=None):
+        from_email = Email(self.config["DEFAULT_FROM"] if sender is None else sender) 
+        to_email = Email(self.config["DEFAULT_TO"] if receiver is None else receiver)
         content = Content("text/html", self.content)
         mail = Mail(from_email, subject, to_email, content)
 
